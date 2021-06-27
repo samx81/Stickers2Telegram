@@ -1,0 +1,2 @@
+rootProject.name = "Stickers2Telegram"
+include ':app'
