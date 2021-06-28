@@ -1,5 +1,7 @@
 package com.example.stickers2telegram.model
 
-data class StickerItem (val resourceId : Int) {
-    // TODO("Fill something here?")
+import java.io.File
+
+data class StickerItem (val file : File, var emoji : String = "") {
+    // TODO("can I modify attr on the fly?")
 }

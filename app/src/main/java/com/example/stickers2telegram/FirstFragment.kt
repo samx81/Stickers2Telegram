@@ -6,7 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.stickers2telegram.adapter.ItemAdapter
+import com.example.stickers2telegram.data.Datasource
 import com.example.stickers2telegram.databinding.FragmentFirstBinding
+import com.example.stickers2telegram.model.StickerItem
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -31,6 +35,12 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val recyclerView = binding.recyclerView
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(activity,2)
+            adapter = ItemAdapter(context, (activity as Stickers2Emojis).stickerItems)
+        }
 
 //        binding.buttonFirst.setOnClickListener {
 //            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)

@@ -5,8 +5,8 @@
     <string name="button_build">建立圖包</string>
     <string name="title_activity_stickers2_emojis">Stickers2Emojis</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="first_fragment_label">選擇貼圖</string>
+    <string name="second_fragment_label">填入表情符號</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
