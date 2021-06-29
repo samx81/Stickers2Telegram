@@ -31,10 +31,16 @@
 
         <TextView
             android:id="@+id/item_emoji"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="36dp"
+            android:layout_marginBottom="8dp"
+            android:autoSizeMaxTextSize="36sp"
+            android:autoSizeMinTextSize="12sp"
+            android:gravity="bottom"
+            android:maxLines="1"
+            android:textAlignment="textEnd"
             android:textColor="@color/primaryDarkColor"
-            android:textSize="34sp"
+            app:autoSizeTextType="uniform"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="😡" />
