@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
         if (!workDir.exists()) workDir.mkdir()
 
-        val downloadedFile = File(workDir, "$storeId.zip")
+        val downloadedFile = File(getExternalFilesDir(null)!!, "$storeId.zip")
         if (downloadedFile.exists()) return
 
         // https://stackoverflow.com/questions/25893030/download-binary-file-from-okhttp
@@ -131,6 +131,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
         url = "https://line.me/S/sticker/$stickerPKID"
+        // TODO: coroutine usage
         GlobalScope.launch {
             val html = Jsoup.connect(url).get()
             // Shiba Inu (Shiba-Dog) stamps – LINE貼圖 | LINE STORE, regex: "(.+)\\s–\\sLINE"

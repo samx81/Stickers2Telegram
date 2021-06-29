@@ -97,8 +97,4 @@ class SecondFragment : Fragment() {
         (activity as Stickers2Emojis).toggleFAB()
         _binding = null
     }
-
-    override fun onDetach() {
-        super.onDetach()
-    }
 }

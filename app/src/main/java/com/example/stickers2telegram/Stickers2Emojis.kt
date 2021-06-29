@@ -1,12 +1,14 @@
 package com.example.stickers2telegram
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -17,7 +19,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.stickers2telegram.data.Datasource
 import com.example.stickers2telegram.databinding.ActivityStickers2EmojisBinding
 import com.example.stickers2telegram.model.StickerItem
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
+
 
 class Stickers2Emojis : AppCompatActivity() {
 
@@ -39,6 +43,22 @@ class Stickers2Emojis : AppCompatActivity() {
 
     }
 
+    fun searchAvailableTelegram(): String {
+        val pm = packageManager
+        val tgList = listOf<String>("org.telegram.messenger", "org.telegram.messenger.web", "org.telegram.stickersimportexample")
+        for (pkg in tgList) {
+            try {
+                pm.getPackageInfo(pkg, PackageManager.GET_META_DATA)
+                Log.e("F", pkg)
+                return pkg
+            } catch (e: PackageManager.NameNotFoundException) {
+                continue
+            }
+        }
+        Log.e("F", "")
+        return ""
+    }
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,13 +78,15 @@ class Stickers2Emojis : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        val datasource = Datasource(workDir)
+        val datasource = Datasource(getExternalFilesDir(null)!!)
 
         val pkID = intent.getStringExtra("PKID")!!
         stickerItems = datasource.loadStickerItems(pkID)
 
         binding.fab.setOnClickListener { view ->
-            doImport(stickerItems)
+            val tgPKG = searchAvailableTelegram()
+            if (tgPKG.isEmpty()) Snackbar.make(view, "Telegram not found", Snackbar.LENGTH_LONG).setAction("Action", null).show()
+            else {doImport(tgPKG ,stickerItems)}
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show()
         }
@@ -77,24 +99,30 @@ class Stickers2Emojis : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
-    private fun doImport(stickersItems : List<StickerItem>) {
-        Log.e("test", workDir.toString())
-        Log.e("test", applicationContext.getExternalFilesDir(null)?.absolutePath.toString())
+    private fun doImport(tgPKG: String ,stickersItems : List<StickerItem>) {
+
         val stickers = arrayListOf<Uri>()
         val emojis = arrayListOf<String>()
+
+        val intent = Intent(CREATE_STICKER_PACK_ACTION)
+
+        Log.e("SDK", Build.VERSION.SDK_INT.toString())
         stickersItems.forEach {
-            val uri = Uri.fromFile(it.file)
-            Log.wtf("WTF",uri.toString())
+//            val uri = when (Build.VERSION.SDK_INT){
+//                30 -> FileProvider.getUriForFile(this, "com.example.stickers2telegram.fileprovider", it.file)
+//                else -> Uri.fromFile(it.file)
+//            }
+            val uri = FileProvider.getUriForFile(this, "com.example.stickers2telegram.fileprovider", it.file)
+            this.grantUriPermission(tgPKG,uri,Intent.FLAG_GRANT_READ_URI_PERMISSION)
             stickers.add(uri)
             emojis.add(it.emoji)
         }
 
-        val intent = Intent(CREATE_STICKER_PACK_ACTION)
         intent.putExtra(Intent.EXTRA_STREAM, stickers) // (File)s
         intent.putExtra(CREATE_STICKER_PACK_IMPORTER_EXTRA, packageName)
         intent.putExtra(CREATE_STICKER_PACK_EMOJIS_EXTRA, emojis) // strings
         intent.type = "image/*"
-        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+
 
         try {
             startActivity(intent)
