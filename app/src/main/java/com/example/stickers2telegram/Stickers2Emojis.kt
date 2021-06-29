@@ -49,7 +49,11 @@ class Stickers2Emojis : AppCompatActivity() {
 
     fun searchAvailableTelegram(): String {
         val pm = packageManager
-        val tgList = listOf<String>("org.telegram.messenger", "org.telegram.messenger.web", "org.telegram.stickersimportexample")
+        val tgList = listOf<String>(
+            "org.telegram.messenger",
+            "org.telegram.messenger.web",
+            "org.thunderdog.challegram")
+
         for (pkg in tgList) {
             try {
                 pm.getPackageInfo(pkg, PackageManager.GET_META_DATA)

@@ -81,18 +81,20 @@
         tools:layout_editor_absoluteY="16dp" />
 
     <Button
-        android:visibility="gone"
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Button"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/clear_temp_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/clear_temp_btn"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

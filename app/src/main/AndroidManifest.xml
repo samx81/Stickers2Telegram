@@ -38,7 +38,7 @@
         <!-- Specific apps you interact with, eg: -->
         <package android:name="org.telegram.messenger" />
         <package android:name="org.telegram.messenger.web" />
-        <package android:name="org.telegram.stickersimportexample" />
+        <package android:name="org.thunderdog.challegram" />
 
     </queries>
 

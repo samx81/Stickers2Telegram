@@ -58,7 +58,8 @@ class MainActivity : AppCompatActivity() {
         val testBtn : Button = findViewById(R.id.button)
         testBtn.setOnClickListener {
             val urlEnter : EditText = findViewById(R.id.url_enter)
-            urlEnter.setText("https://line.me/S/sticker/7233781?lang=zh-Hant&ref=lsh_stickerDetail")
+            urlEnter.setText("[Qua Sticker]\n" +
+                    "https://line.me/S/sticker/5528898/?lang=zh-Hant&ref=gnsh_stickerDetail")
         }
     }
     // FIXME: Make Progressbar correctly working
@@ -118,14 +119,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun retrieveUrl(){
 
-        fun matchPattern(input:String, pattern:String): String {
+        fun matchPattern(input:String, vararg patterns:String): String {
+            // https://store.line.me/stickershop/product/5528898/zh-Hant
+            //
             if (input.isEmpty()) {
                 Toast.makeText(this, "有些資料為空", Toast.LENGTH_LONG).show()
             }
-            val p = Pattern.compile(pattern)
-            val m = p.matcher(input)
-            if (m.matches()) { return m.group(1)!! }
-            Log.i("Empty",m.toString())
+            for (pattern in patterns){
+                val p = Pattern.compile(pattern)
+                val m = p.matcher(input)
+                if (m.matches()) {
+                    return m.group(1)!!
+                }
+            }
+            Log.i("Empty","Empty")
             return ""
         }
 
@@ -135,7 +142,7 @@ class MainActivity : AppCompatActivity() {
 
         // Expecting pattern like : https://line.me/S/sticker/1001001/?lang=blahblah
         var url = urlEnter.text.toString()
-        val stickerPKID = matchPattern(url, ".*line.me/S/sticker/([0-9]*).*")
+        val stickerPKID = matchPattern(url, "[\\s\\S]*line.me/S/sticker/([0-9]*).*",".*product/([0-9]*).*")
 
         if (stickerPKID.isEmpty()) {
             Toast.makeText(this, "請檢查輸入的連結", Toast.LENGTH_LONG).show()
