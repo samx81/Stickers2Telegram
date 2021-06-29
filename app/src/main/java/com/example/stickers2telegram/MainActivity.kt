@@ -1,9 +1,13 @@
 package com.example.stickers2telegram
 
 import android.app.AlertDialog
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import coil.load
 import kotlinx.coroutines.*
@@ -18,18 +22,34 @@ import java.util.regex.Pattern
 class MainActivity : AppCompatActivity() {
     lateinit var alertBuilder : AlertDialog.Builder
     lateinit var progressDialog: AlertDialog
+
+    lateinit var workDir :File
     var storeId : String = "0"
     private val client = OkHttpClient()
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        workDir = File(
+            Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS),
+            "stk2tg"
+        )
 
         val retrieveBtn : Button = findViewById(R.id.retrieve_btn)
         retrieveBtn.setOnClickListener { retrieveUrl() }
 
         val buildPackBtn : Button = findViewById(R.id.build_pack_btn)
-        buildPackBtn.setOnClickListener { showProgress() }
+        buildPackBtn.setOnClickListener {
+            showProgress()
+        }
+        val testBtn : Button = findViewById(R.id.button)
+        testBtn.setOnClickListener {
+            val urlEnter : EditText = findViewById(R.id.url_enter)
+            urlEnter.setText("https://line.me/S/sticker/7233781?lang=zh-Hant&ref=lsh_stickerDetail")
+        }
     }
 
     private fun showProgress(){
@@ -43,20 +63,27 @@ class MainActivity : AppCompatActivity() {
             }
             getStickerPack()
         }
+        val intent = Intent(this, Stickers2Emojis::class.java).apply {
+            putExtra("PKID",storeId)
+        }
+        startActivity(intent)
     }
-
-    suspend fun getStickerPack(){
-//        if (!this::storeId.isInitialized) return
+    // FIXME: tidy up this section
+    private fun getStickerPack(){
         Log.i("ID ava?", storeId)
         if (storeId == "0") return
         val packUrl = "http://dl.stickershop.line.naver.jp/products/0/0/1/$storeId/iphone/stickers@2x.zip"
+
+        if (!workDir.exists()) workDir.mkdir()
+
+        val downloadedFile = File(workDir, "$storeId.zip")
+        if (downloadedFile.exists()) return
 
         // https://stackoverflow.com/questions/25893030/download-binary-file-from-okhttp
         val request = Request.Builder()
             .url(packUrl)
             .build()
         val response = OkHttpClient().newCall(request).execute()
-        val downloadedFile = File(cacheDir, "$storeId.zip")
         val sink: BufferedSink = downloadedFile.sink().buffer()
         sink.writeAll(response.body!!.source())
         sink.close()
@@ -97,7 +124,7 @@ class MainActivity : AppCompatActivity() {
 
         // Expecting pattern like : https://line.me/S/sticker/1001001/?lang=blahblah
         var url = urlEnter.text.toString()
-        val stickerPKID = matchPattern(url, ".*line.me/S/sticker/([0-9]*)/.*")
+        val stickerPKID = matchPattern(url, ".*line.me/S/sticker/([0-9]*).*")
 
         if (stickerPKID.isEmpty()) {
             Toast.makeText(this, "請檢查輸入的連結", Toast.LENGTH_LONG).show()

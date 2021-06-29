@@ -1,5 +1,6 @@
 package com.example.stickers2telegram
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
@@ -12,17 +13,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.example.stickers2telegram.databinding.FragmentSecondBinding
 import com.example.stickers2telegram.model.StickerItem
-import kotlinx.coroutines.runBlocking
 import java.io.FileOutputStream
-import android.widget.ProgressBar
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.*
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -40,61 +33,46 @@ class SecondFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var image : RequestBuilder<Bitmap>
+    private lateinit var bitmap: Bitmap
 
     private lateinit var _stickerItem: StickerItem
 
-    fun saveImg(bitmap : Bitmap){
+    private fun saveImg(bitmap : Bitmap){
         val out = FileOutputStream(_stickerItem.file)
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
         out.flush()
         out.close()
+        Log.i("Saved","as title")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+        (activity as Stickers2Emojis).toggleFAB()
         arguments?.let {
             _stickerItem = (activity as Stickers2Emojis).stickerItems[it.getInt(IDX)]
         }
     }
 
-//    suspend fun loadImage() {
-//        coroutineScope {
-//
-//        }
-//    }
-
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
 
-        image = Glide.with(requireContext()).asBitmap().load(_stickerItem.file).override(512, 512)
-        var bitmap : Bitmap
-        image.fitCenter()
-            .listener(object : RequestListener<Bitmap> {
-                override fun onLoadFailed(
-                    e: GlideException?, model: Any?,
-                    target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
-                    Log.e("Error",e.toString())
-                    return false
-                }
+        image = Glide.with(requireContext()).asBitmap().load(_stickerItem.file)
+        image.override(512, 512).fitCenter().into(binding.editFragImage)
 
-                override fun onResourceReady(
-                    resource: Bitmap?,
-                    model: Any?,
-                    target: Target<Bitmap>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    bitmap = resource!!
-                    return true
-                }
-            }).into(binding.editFragImage)
+        viewLifecycleOwner.lifecycleScope.launch {
+            bitmap = withContext(Dispatchers.IO) {
+                image.submit().get()
+            }
+            binding.sizeText.text = "WxH:${bitmap.width}x${bitmap.height} (auto-scaled to 512)"
+        }
 
-        binding.sizeText.text = "${bitmap.height}x${bitmap.width} (After Scaled to 512)"
 
         // TODO: Limited to emojis
         if (_stickerItem.emoji.isNotEmpty()){
@@ -108,12 +86,19 @@ class SecondFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonSecond.setOnClickListener {
+            saveImg(bitmap)
+            _stickerItem.emoji = binding.editEmoji.text.toString()
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        (activity as Stickers2Emojis).toggleFAB()
         _binding = null
+    }
+
+    override fun onDetach() {
+        super.onDetach()
     }
 }

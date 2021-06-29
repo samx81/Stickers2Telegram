@@ -17,7 +17,7 @@
             android:name=".Stickers2Emojis"
             android:exported="true"
             android:label="@string/title_activity_stickers2_emojis"
-            android:theme="@style/Theme.Stickers2Telegram.NoActionBar"></activity>
+            android:theme="@style/Theme.Stickers2Telegram.NoActionBar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,6 +25,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.stickers2telegram.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepath" />
+        </provider>
     </application>
 
 </manifest>

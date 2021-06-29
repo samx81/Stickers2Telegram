@@ -3,6 +3,7 @@
     <string name="url_hint">輸入 Line 貼圖網址</string>
     <string name="button_send">擷取</string>
     <string name="button_build">建立圖包</string>
+    <string name="img_desc">貼圖</string>
     <string name="title_activity_stickers2_emojis">Stickers2Emojis</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">選擇貼圖</string>
