@@ -10,12 +10,12 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import coil.load
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import okhttp3.*
 import okio.*
 import org.jsoup.Jsoup
 import java.io.File
-import java.io.IOException
 import java.util.regex.Pattern
 
 
@@ -32,11 +32,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        workDir = File(
-            Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS),
-            "stk2tg"
-        )
+//        workDir = File(
+//            Environment.getExternalStoragePublicDirectory(
+//                Environment.DIRECTORY_DOCUMENTS),
+//            "stk2tg"
+//        )
 
         val retrieveBtn : Button = findViewById(R.id.retrieve_btn)
         retrieveBtn.setOnClickListener { retrieveUrl() }
@@ -45,13 +45,24 @@ class MainActivity : AppCompatActivity() {
         buildPackBtn.setOnClickListener {
             showProgress()
         }
+
+        val clrTempBtn : Button = findViewById(R.id.clear_temp_button)
+        clrTempBtn.setOnClickListener {
+            val children = getExternalFilesDir(null)!!.list()
+            for (f in children){
+                File(getExternalFilesDir(null)!!, f).deleteRecursively()
+            }
+            Snackbar.make(it,"暫存已清除",Snackbar.LENGTH_LONG).setAction("Action", null).show()
+        }
+
         val testBtn : Button = findViewById(R.id.button)
         testBtn.setOnClickListener {
             val urlEnter : EditText = findViewById(R.id.url_enter)
             urlEnter.setText("https://line.me/S/sticker/7233781?lang=zh-Hant&ref=lsh_stickerDetail")
         }
     }
-
+    // FIXME: Make Progressbar correctly working
+    // FIXME: Change function name to more understandable one
     private fun showProgress(){
         progressDialog = getDialogProgressBar().create()
         progressDialog.setCanceledOnTouchOutside(false)
@@ -74,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         if (storeId == "0") return
         val packUrl = "http://dl.stickershop.line.naver.jp/products/0/0/1/$storeId/iphone/stickers@2x.zip"
 
-        if (!workDir.exists()) workDir.mkdir()
+//        if (!workDir.exists()) workDir.mkdir()
 
         val downloadedFile = File(getExternalFilesDir(null)!!, "$storeId.zip")
         if (downloadedFile.exists()) return

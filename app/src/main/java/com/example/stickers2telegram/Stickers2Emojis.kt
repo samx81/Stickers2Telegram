@@ -29,6 +29,7 @@ class Stickers2Emojis : AppCompatActivity() {
     private lateinit var binding: ActivityStickers2EmojisBinding
 
     lateinit var stickerItems: List<StickerItem>
+    lateinit var datasource : Datasource
     private val testStickerID = "1001001"
 
     private val CREATE_STICKER_PACK_ACTION = "org.telegram.messenger.CREATE_STICKER_PACK"
@@ -41,6 +42,9 @@ class Stickers2Emojis : AppCompatActivity() {
         if (binding.fab.visibility != View.VISIBLE){ binding.fab.show() }
         else { binding.fab.hide() }
 
+    }
+    fun saveEmojis(){
+        datasource.saveEmojis(stickerItems)
     }
 
     fun searchAvailableTelegram(): String {
@@ -78,7 +82,7 @@ class Stickers2Emojis : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        val datasource = Datasource(getExternalFilesDir(null)!!)
+        datasource = Datasource(getExternalFilesDir(null)!!)
 
         val pkID = intent.getStringExtra("PKID")!!
         stickerItems = datasource.loadStickerItems(pkID)
@@ -112,6 +116,7 @@ class Stickers2Emojis : AppCompatActivity() {
 //                30 -> FileProvider.getUriForFile(this, "com.example.stickers2telegram.fileprovider", it.file)
 //                else -> Uri.fromFile(it.file)
 //            }
+            if (it.emoji.isEmpty()) return@forEach
             val uri = FileProvider.getUriForFile(this, "com.example.stickers2telegram.fileprovider", it.file)
             this.grantUriPermission(tgPKG,uri,Intent.FLAG_GRANT_READ_URI_PERMISSION)
             stickers.add(uri)

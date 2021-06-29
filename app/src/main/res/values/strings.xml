@@ -8,8 +8,9 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">選擇貼圖</string>
     <string name="second_fragment_label">填入表情符號</string>
+    <string name="clear_temp_btn">清除暫存</string>
     <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="save">儲存</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>

@@ -1,6 +1,6 @@
 package com.example.stickers2telegram.data
 
-import android.os.Environment
+import android.util.Log
 import com.example.stickers2telegram.model.StickerItem
 import java.io.File
 
@@ -8,6 +8,7 @@ import java.io.File
 class Datasource (private val workDir: File) {
 
     val regex = Regex("\\d+@2x.png")
+    lateinit var emojiListFile : File
 
     fun unzipPack(stickerID: String){
         val f = File(workDir, "$stickerID.zip")
@@ -15,19 +16,46 @@ class Datasource (private val workDir: File) {
         UnzipUtils.unzip(f, destDir.path)
     }
 
+    fun getEmojiMap(stickerDir : File): MutableMap<String,String>{
+        emojiListFile = File(stickerDir, "emoji.txt")
+        val emojiMap = mutableMapOf<String, String>()
+        if (!emojiListFile.isFile) {
+            emojiListFile.createNewFile()
+        }
+        val emojilst = emojiListFile.readText()
+        // Pair of filename to emoji
+        if (emojilst.isNotEmpty()){
+            emojilst.split("\n")
+                .filter { it.isNotEmpty() } // I don't know why but filtering is working
+                .associateTo(emojiMap) {
+                    it.split(",").let { (k, v) -> k to v }
+                }
+        }
+        return emojiMap
+    }
+
+    fun saveEmojis(items : List<StickerItem>){
+
+        var outputstr = ""
+        items.filter { it.emoji.isNotEmpty() }.forEach {
+            outputstr += "${it.file.name},${it.emoji}\n"
+        }
+        Log.e("test", outputstr)
+        emojiListFile.writeText(outputstr)
+
+    }
+
     fun loadStickerItems(stickerID: String) : List<StickerItem>{
-        // TODO: came up a better way handling the list
         val stickerItems = mutableListOf<StickerItem>()
         val stickerDir = File(workDir, stickerID)
 
         if (!stickerDir.isDirectory){
             unzipPack(stickerID)
         }
+        val map = getEmojiMap(stickerDir)
 
-        // TODO: Remove this test code
-        val testemojis = listOf<String>("\uD83D\uDE00","\uD83D\uDE0D","\uD83D\uDE06","\uD83D\uDE05")
         stickerDir.listFiles()!!.sorted().forEach {
-            if ( it.name.contains(regex) ) stickerItems.add(StickerItem(it, testemojis.random()))
+            if ( it.name.contains(regex) ) stickerItems.add(StickerItem(it, map.getOrDefault(it.name, "")))
         }
         return stickerItems.toList()
     }
