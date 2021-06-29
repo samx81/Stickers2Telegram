@@ -1,9 +1,7 @@
-package com.example.stickers2telegram.adapter
+package com.ramenbot.stickers2telegram.adapter
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.graphics.Path
-import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,11 +14,9 @@ import androidx.cardview.widget.CardView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.stickers2telegram.FirstFragmentDirections
-import com.example.stickers2telegram.R
-import com.example.stickers2telegram.model.StickerItem
-import java.io.File
-import kotlin.random.Random
+import com.ramenbot.stickers2telegram.FirstFragmentDirections
+import com.ramenbot.stickers2telegram.R
+import com.ramenbot.stickers2telegram.model.StickerItem
 
 class ItemAdapter(private val context: Context, private val dataset: List<StickerItem>
     ): RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {

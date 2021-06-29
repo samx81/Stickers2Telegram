@@ -1,4 +1,4 @@
-package com.example.stickers2telegram
+package com.ramenbot.stickers2telegram
 
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -16,9 +15,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.example.stickers2telegram.data.Datasource
-import com.example.stickers2telegram.databinding.ActivityStickers2EmojisBinding
-import com.example.stickers2telegram.model.StickerItem
+import com.ramenbot.stickers2telegram.data.Datasource
+import com.ramenbot.stickers2telegram.databinding.ActivityStickers2EmojisBinding
+import com.ramenbot.stickers2telegram.model.StickerItem
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 

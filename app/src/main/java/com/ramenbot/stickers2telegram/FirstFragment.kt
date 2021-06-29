@@ -1,16 +1,13 @@
-package com.example.stickers2telegram
+package com.ramenbot.stickers2telegram
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.stickers2telegram.adapter.ItemAdapter
-import com.example.stickers2telegram.data.Datasource
-import com.example.stickers2telegram.databinding.FragmentFirstBinding
-import com.example.stickers2telegram.model.StickerItem
+import com.ramenbot.stickers2telegram.adapter.ItemAdapter
+import com.ramenbot.stickers2telegram.databinding.FragmentFirstBinding
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.

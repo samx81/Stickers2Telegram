@@ -1,4 +1,4 @@
-package com.example.stickers2telegram.data
+package com.ramenbot.stickers2telegram.data
 import java.io.*
 import java.util.zip.ZipFile
 

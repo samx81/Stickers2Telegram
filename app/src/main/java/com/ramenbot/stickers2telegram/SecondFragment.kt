@@ -1,4 +1,4 @@
-package com.example.stickers2telegram
+package com.ramenbot.stickers2telegram
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -11,8 +11,8 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
-import com.example.stickers2telegram.databinding.FragmentSecondBinding
-import com.example.stickers2telegram.model.StickerItem
+import com.ramenbot.stickers2telegram.databinding.FragmentSecondBinding
+import com.ramenbot.stickers2telegram.model.StickerItem
 import java.io.FileOutputStream
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar

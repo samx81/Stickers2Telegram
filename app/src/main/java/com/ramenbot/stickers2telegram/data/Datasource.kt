@@ -1,7 +1,7 @@
-package com.example.stickers2telegram.data
+package com.ramenbot.stickers2telegram.data
 
 import android.util.Log
-import com.example.stickers2telegram.model.StickerItem
+import com.ramenbot.stickers2telegram.model.StickerItem
 import java.io.File
 
 

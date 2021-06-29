@@ -1,4 +1,4 @@
-package com.example.stickers2telegram.model
+package com.ramenbot.stickers2telegram.model
 
 import java.io.File
 

@@ -1,10 +1,9 @@
-package com.example.stickers2telegram
+package com.ramenbot.stickers2telegram
 
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.widget.*
 import androidx.annotation.RequiresApi
